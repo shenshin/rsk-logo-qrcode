@@ -61,6 +61,7 @@ function App() {
         image: hasLogo ? rskLogo : undefined,
         imageOptions: {
           imageSize: newImageSize,
+          margin: 5,
         },
       };
       const qr = new QRCodeStyling(options);
@@ -96,7 +97,7 @@ function App() {
         />
       </label>
       <label htmlFor="qr-size">
-        QR size (20px - 1000px)
+        QR size (30px - 1000px)
         <input
           type="number"
           step="10"
