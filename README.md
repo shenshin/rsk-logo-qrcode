@@ -1,3 +1,3 @@
 # Generator of QR-codes with RSK logo
 
-[Run the Generator](https://github.com/facebook/create-react-app).
+[Generate a QR-code with RSK logo image](https://hungry-mcclintock-76db11.netlify.app/).
