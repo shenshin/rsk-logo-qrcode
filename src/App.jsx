@@ -43,12 +43,10 @@ function App() {
   const [hasLogo, setHasLogo] = useState(true);
   const [qrSize, setQrSize] = useState(200);
   const [imageSize, setImageSize] = useState(0.5);
-  const [options, setOptions] = useState(null);
-  const [qrCode, setQrCode] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
+
+  const [qrCode] = useState(new QRCodeStyling());
+  const [errorMessage] = useState('');
   const qrRef = useRef();
-  // useEffect launcher
-  const [generateQr, setGenerateQr] = useState(true);
 
   const validateInputs = () => {
     const newQrSize =
@@ -68,10 +66,9 @@ function App() {
     return { newQrSize, newImageSize };
   };
 
-  // recalculate options
-  useEffect(() => {
+  const getOptions = () => {
     const { newQrSize, newImageSize } = validateInputs();
-    setOptions({
+    return {
       width: newQrSize,
       height: newQrSize,
       type: 'svg',
@@ -88,33 +85,31 @@ function App() {
       cornersDotOptions: {
         color: '#16a92e',
       },
-    });
-  }, [generateQr]);
+    };
+  };
 
-  // set initial instance of qr-code library
-  useEffect(() => {
-    setQrCode(new QRCodeStyling(options));
-  }, []);
-
-  // update qr-code on the page
-  useEffect(() => {
-    try {
-      if (qrCode) {
-        qrCode.update(options);
-        const targetDiv = qrRef.current;
-        targetDiv.innerHTML = '';
-        qrCode.append(targetDiv);
-      }
-    } catch (error) {
-      setErrorMessage(error.message);
-    }
-  }, [options]);
+  const updateOptions = () => {
+    qrCode?.update(getOptions());
+    const targetDiv = qrRef.current;
+    targetDiv.innerHTML = '';
+    qrCode?.append(targetDiv);
+  };
 
   const downloadImage = () => {
     qrCode?.download({
       extension: 'png',
     });
   };
+
+  const handleEnter = (e) => {
+    if (e.key === 'Enter') {
+      updateOptions();
+    }
+  };
+
+  useEffect(() => {
+    updateOptions();
+  }, []);
 
   return (
     <div style={styles.container}>
@@ -128,6 +123,7 @@ function App() {
           value={qrSource}
           onChange={(e) => setQrSource(e.target.value)}
           style={styles.sourceInput}
+          onKeyPress={handleEnter}
         />
       </label>
       <label htmlFor="place-logo">
@@ -137,6 +133,7 @@ function App() {
           id="place-logo"
           checked={hasLogo}
           onChange={(e) => setHasLogo(e.target.checked)}
+          onKeyPress={handleEnter}
         />
       </label>
       <label htmlFor="qr-size">
@@ -148,6 +145,7 @@ function App() {
           value={qrSize}
           onChange={(e) => setQrSize(e.target.value)}
           style={styles.numberInput}
+          onKeyPress={handleEnter}
         />
       </label>
       <label htmlFor="image-size">
@@ -159,12 +157,14 @@ function App() {
           value={imageSize}
           onChange={(e) => setImageSize(e.target.value)}
           style={styles.numberInput}
+          onKeyPress={handleEnter}
         />
       </label>
       <button
         type="button"
-        onClick={() => setGenerateQr((c) => !c)}
+        onClick={updateOptions}
         style={styles.button}
+        onKeyPress={handleEnter}
       >
         Generate a QR code
       </button>
