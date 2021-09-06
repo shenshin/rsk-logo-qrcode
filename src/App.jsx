@@ -45,7 +45,6 @@ function App() {
   const [imageSize, setImageSize] = useState(0.5);
 
   const [qrCode] = useState(new QRCodeStyling());
-  const [errorMessage] = useState('');
   const qrRef = useRef();
 
   const validateInputs = () => {
@@ -172,7 +171,6 @@ function App() {
       <button type="button" onClick={downloadImage} style={styles.button}>
         Download PNG
       </button>
-      {errorMessage && <p style={styles.error}>{errorMessage}</p>}
     </div>
   );
 }
