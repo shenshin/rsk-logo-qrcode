@@ -1,7 +1,12 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import QRCodeStyling from 'qr-code-styling';
 import rskLogo from './rsk_logo.svg';
+
+const MIN_QR_SIZE = 100; // px
+const MAX_QR_SIZE = 1000; // px
+const MIN_IMG_SIZE = 0.1;
+const MAX_IMG_SIZE = 0.5;
 
 const styles = {
   container: {
@@ -18,7 +23,7 @@ const styles = {
     width: 100,
     height: 100,
   },
-  generateButton: {
+  button: {
     cursor: 'pointer',
   },
   error: {
@@ -38,40 +43,78 @@ function App() {
   const [hasLogo, setHasLogo] = useState(true);
   const [qrSize, setQrSize] = useState(200);
   const [imageSize, setImageSize] = useState(0.5);
+  const [options, setOptions] = useState(null);
+  const [qrCode, setQrCode] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const qrRef = useRef();
+  // useEffect launcher
+  const [generateQr, setGenerateQr] = useState(true);
 
   const validateInputs = () => {
-    const newQrSize = qrSize <= 30 ? 30 : qrSize >= 1000 ? 1000 : qrSize;
+    const newQrSize =
+      qrSize <= MIN_QR_SIZE
+        ? MIN_QR_SIZE
+        : qrSize >= MAX_QR_SIZE
+        ? MAX_QR_SIZE
+        : qrSize;
     setQrSize(newQrSize);
     const newImageSize =
-      imageSize <= 0 ? 0.0 : imageSize >= 0.5 ? 0.5 : imageSize;
+      imageSize <= MIN_IMG_SIZE
+        ? MIN_IMG_SIZE
+        : imageSize >= MAX_IMG_SIZE
+        ? MAX_IMG_SIZE
+        : imageSize;
     setImageSize(newImageSize);
     return { newQrSize, newImageSize };
   };
 
-  const generateQRCode = useCallback(() => {
+  // recalculate options
+  useEffect(() => {
+    const { newQrSize, newImageSize } = validateInputs();
+    setOptions({
+      width: newQrSize,
+      height: newQrSize,
+      type: 'svg',
+      data: qrSource,
+      image: hasLogo ? rskLogo : undefined,
+      imageOptions: {
+        imageSize: newImageSize,
+        margin: 5,
+      },
+      cornersSquareOptions: {
+        color: '#0b5d2e',
+        type: 'extra-rounded',
+      },
+      cornersDotOptions: {
+        color: '#16a92e',
+      },
+    });
+  }, [generateQr]);
+
+  // set initial instance of qr-code library
+  useEffect(() => {
+    setQrCode(new QRCodeStyling(options));
+  }, []);
+
+  // update qr-code on the page
+  useEffect(() => {
     try {
-      const { newQrSize, newImageSize } = validateInputs();
-      const options = {
-        width: newQrSize,
-        height: newQrSize,
-        type: 'svg',
-        data: qrSource,
-        image: hasLogo ? rskLogo : undefined,
-        imageOptions: {
-          imageSize: newImageSize,
-          margin: 5,
-        },
-      };
-      const qr = new QRCodeStyling(options);
-      const targetDiv = qrRef.current;
-      targetDiv.innerHTML = '';
-      qr.append(targetDiv);
+      if (qrCode) {
+        qrCode.update(options);
+        const targetDiv = qrRef.current;
+        targetDiv.innerHTML = '';
+        qrCode.append(targetDiv);
+      }
     } catch (error) {
       setErrorMessage(error.message);
     }
-  }, [qrSize, imageSize, qrSource, hasLogo]);
+  }, [options]);
+
+  const downloadImage = () => {
+    qrCode?.download({
+      extension: 'png',
+    });
+  };
 
   return (
     <div style={styles.container}>
@@ -97,7 +140,7 @@ function App() {
         />
       </label>
       <label htmlFor="qr-size">
-        QR size (30px - 1000px)
+        {`QR size (${MIN_QR_SIZE}px - ${MAX_QR_SIZE}px)`}
         <input
           type="number"
           step="10"
@@ -108,7 +151,7 @@ function App() {
         />
       </label>
       <label htmlFor="image-size">
-        Image size (0 - 0.5)
+        {`Image size (${MIN_IMG_SIZE} - ${MAX_IMG_SIZE})`}
         <input
           type="number"
           step="0.01"
@@ -120,12 +163,15 @@ function App() {
       </label>
       <button
         type="button"
-        onClick={generateQRCode}
-        style={styles.generateButton}
+        onClick={() => setGenerateQr((c) => !c)}
+        style={styles.button}
       >
         Generate a QR code
       </button>
       <div ref={qrRef} />
+      <button type="button" onClick={downloadImage} style={styles.button}>
+        Download PNG
+      </button>
       {errorMessage && <p style={styles.error}>{errorMessage}</p>}
     </div>
   );
