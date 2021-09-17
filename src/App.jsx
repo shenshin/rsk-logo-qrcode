@@ -16,9 +16,6 @@ function App() {
   const [isStyled, setIsStyled] = useState(true);
   const [qrSize, setQrSize] = useState(200);
   const [imageSize, setImageSize] = useState(0.5);
-  const [error, setError] = useState('');
-
-  const [qrCode] = useState(new QRCodeStyling());
   const qrRef = useRef();
 
   const validateInputs = () => {
@@ -42,35 +39,41 @@ function App() {
   const getOptions = () => {
     const { newQrSize, newImageSize } = validateInputs();
     const logo = graphics[currentLogo];
-    return {
-      width: newQrSize,
-      height: newQrSize,
-      type: 'svg',
-      data: qrSource,
-      image: hasLogo && `${process.env.PUBLIC_URL}/images/${logo.image}`,
-      imageOptions: {
-        imageSize: newImageSize,
-        margin: logo.margin,
-      },
-      cornersSquareOptions: {
-        color: isStyled && logo.colors.dark,
-        type: isStyled && 'extra-rounded',
-      },
-      cornersDotOptions: {
-        color: isStyled && logo.colors.bright,
-      },
-    };
+    return JSON.parse(
+      JSON.stringify({
+        width: newQrSize,
+        height: newQrSize,
+        type: 'svg',
+        data: qrSource,
+        image: hasLogo && `${process.env.PUBLIC_URL}/images/${logo.image}`,
+        imageOptions: {
+          imageSize: newImageSize,
+          margin: logo.margin,
+        },
+        cornersSquareOptions: {
+          color: isStyled && logo.colors.dark,
+          type: isStyled && 'extra-rounded',
+        },
+        cornersDotOptions: {
+          color: isStyled && logo.colors.bright,
+        },
+      }),
+    );
   };
 
   const updateOptions = () => {
-    qrCode?.update(getOptions());
+    const qrCode = new QRCodeStyling(getOptions());
     const targetDiv = qrRef.current;
     targetDiv.innerHTML = '';
-    qrCode?.append(targetDiv);
+    qrCode.append(targetDiv);
   };
 
   const downloadImage = () => {
-    qrCode?.download({
+    // I instantiate it again and don't put into react state
+    // because the library probably has bugs and 'update'
+    // method doen't update downloaded images
+    const qrCode = new QRCodeStyling(getOptions());
+    qrCode.download({
       name: qrSource,
       extension: 'png',
     });
@@ -166,7 +169,6 @@ function App() {
           onKeyPress={handleEnter}
         />
       </label>
-      {error && <p>{error}</p>}
       <button type="button" onClick={updateOptions} onKeyPress={handleEnter}>
         Update QR code
       </button>
