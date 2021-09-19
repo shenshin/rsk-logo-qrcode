@@ -39,6 +39,8 @@ function App() {
   const getOptions = () => {
     const { newQrSize, newImageSize } = validateInputs();
     const logo = graphics[currentLogo];
+    // I copy the object to prevent react state references
+    // to get inside the QRCodeStyling class instance
     return JSON.parse(
       JSON.stringify({
         width: newQrSize,
@@ -74,7 +76,7 @@ function App() {
     // method doen't update downloaded images
     const qrCode = new QRCodeStyling(getOptions());
     qrCode.download({
-      name: qrSource,
+      name: qrSource.replace(/[\W]+/g, '_'),
       extension: 'png',
     });
   };

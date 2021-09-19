@@ -1,19 +1,19 @@
 const graphics = [
   {
-    name: 'RSK',
-    image: 'rsk.svg',
-    margin: 4,
-    colors: {
-      bright: '#16a92e',
-      dark: '#0b5d2e',
-    },
-  },
-  {
     name: 'IOVLabs',
     image: 'o-logo.svg',
     margin: 0,
     colors: {
       bright: '#1acd6a',
+      dark: '#0b5d2e',
+    },
+  },
+  {
+    name: 'RSK',
+    image: 'RSK_Logo_Final.svg',
+    margin: 0,
+    colors: {
+      bright: '#16a92e',
       dark: '#0b5d2e',
     },
   },
