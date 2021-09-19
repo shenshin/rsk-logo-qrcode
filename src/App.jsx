@@ -76,7 +76,7 @@ function App() {
     // method doen't update downloaded images
     const qrCode = new QRCodeStyling(getOptions());
     qrCode.download({
-      name: qrSource.replace(/[\W]+/g, '_'),
+      name: String(qrSource).replace(/[\W]+/g, '_'),
       extension: 'png',
     });
   };
