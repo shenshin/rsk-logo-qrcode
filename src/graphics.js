@@ -2,7 +2,7 @@ const graphics = [
   {
     name: 'IOVLabs',
     image: 'o-logo.svg',
-    margin: 0,
+    margin: 3,
     colors: {
       bright: '#1acd6a',
       dark: '#0b5d2e',
@@ -10,7 +10,7 @@ const graphics = [
   },
   {
     name: 'RSK',
-    image: 'RSK_Logo_Final.svg',
+    image: 'rsk.svg',
     margin: 0,
     colors: {
       bright: '#16a92e',
@@ -20,7 +20,7 @@ const graphics = [
   {
     name: 'RIF',
     image: 'rif.svg',
-    margin: 4,
+    margin: 2,
     colors: {
       bright: '#1ab1e3',
       dark: '#0d57bd',
@@ -29,7 +29,7 @@ const graphics = [
   {
     name: 'TARINGA',
     image: 'taringa.svg',
-    margin: 2,
+    margin: 0,
     colors: {
       bright: '#22509d',
       dark: '#22509d',
