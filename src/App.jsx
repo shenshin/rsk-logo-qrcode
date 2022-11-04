@@ -33,6 +33,11 @@ function App() {
       <button type="button" onClick={downloadImage}>
         Download PNG
       </button>
+      <div>
+        <p>
+          Brought to you with ❤️ by the Developer Experience team @ IOV Labs!
+        </p>
+      </div>
     </div>
   );
 }
