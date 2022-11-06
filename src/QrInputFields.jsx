@@ -9,7 +9,7 @@ const MAX_IMG_SIZE = 0.5;
 
 const QrInputFields = ({ setOptions }) => {
   const [qrSource, setQrSource] = useState(graphics[0].url);
-  const [qrSize, setQrSize] = useState(200);
+  const [qrSize, setQrSize] = useState(512);
   const [imageSize, setImageSize] = useState(0.5);
 
   const [currentLogo, setCurrentLogo] = useState(0);

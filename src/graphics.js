@@ -1,13 +1,13 @@
 const graphics = [
   {
-    name: 'IOVLabs',
-    image: 'o-logo.svg',
-    margin: 3,
+    name: 'Rootstock',
+    image: 'rootstock.svg',
+    margin: 2,
     colors: {
-      bright: '#1acd6a',
-      dark: '#0b5d2e',
+      bright: '#ff9100',
+      dark: '#000000',
     },
-    url: 'https://www.iovlabs.org/',
+    url: 'https://rootstock.io/',
   },
   {
     name: 'RSK',
@@ -28,6 +28,16 @@ const graphics = [
       dark: '#0d57bd',
     },
     url: 'https://www.rifos.org/',
+  },
+  {
+    name: 'IOVLabs',
+    image: 'iov.svg',
+    margin: 3,
+    colors: {
+      bright: '#1acd6a',
+      dark: '#0b5d2e',
+    },
+    url: 'https://www.iovlabs.org/',
   },
   {
     name: 'TARINGA',
