@@ -61,7 +61,7 @@ const QrInputFields = ({ setOptions }) => {
         type: isStyled && 'extra-rounded',
       },
       cornersDotOptions: {
-        color: isStyled && logo.colors.bright,
+        color: isStyled && logo.colors.light,
       },
     });
   }, [validationApprove]);
@@ -76,7 +76,7 @@ const QrInputFields = ({ setOptions }) => {
     <>
       <div className={styles.iconsContainer}>
         {graphics.map((logo, i) => (
-          <div className={styles.icon} key={logo.name}>
+          <label htmlFor={logo.id} className={styles.icon} key={logo.id}>
             <img
               src={`${process.env.PUBLIC_URL}/images/${logo.image}`}
               className={styles.rskImage}
@@ -86,10 +86,11 @@ const QrInputFields = ({ setOptions }) => {
               checked={i === currentLogo}
               type="radio"
               name="logo"
+              id={logo.id}
               value={i}
               onChange={(e) => setCurrentLogo(Number(e.target.value))}
             />
-          </div>
+          </label>
         ))}
       </div>
       <label htmlFor="qr-source">
